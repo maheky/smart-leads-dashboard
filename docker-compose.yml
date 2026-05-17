@@ -1,0 +1,10 @@
+services:
+  backend:
+    container_name: gigflow-backend
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: mongodb+srv://ymahek341_db_user:gigflow123@gigflow-cluster.kwmxd79.mongodb.net/gigflow?retryWrites=true&w=majority
+      JWT_SECRET: gigflowsecretkey
