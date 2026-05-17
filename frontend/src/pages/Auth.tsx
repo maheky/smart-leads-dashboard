@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -24,13 +24,10 @@ export default function Auth({ setToken }: any) {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        {
-          email: form.email,
-          password: form.password,
-        }
-      );
+      const res = await API.post("/auth/login", {
+        email: form.email,
+        password: form.password,
+      });
 
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token);
@@ -46,25 +43,19 @@ export default function Auth({ setToken }: any) {
     e.preventDefault();
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/register`,
-        {
-          name: form.name,
-          email: form.email,
-          password: form.password,
-          role: form.role,
-        }
-      );
+      await API.post("/auth/register", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role,
+      });
 
       toast.success("Account created successfully 🎉");
 
-      const loginRes = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        {
-          email: form.email,
-          password: form.password,
-        }
-      );
+      const loginRes = await API.post("/auth/login", {
+        email: form.email,
+        password: form.password,
+      });
 
       localStorage.setItem("token", loginRes.data.token);
       setToken(loginRes.data.token);
