@@ -21,56 +21,60 @@ export default function Auth({ setToken }: any) {
 
   // LOGIN
   const handleLogin = async (e: any) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  console.log("LOGIN CLICKED");
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          email: form.email,
+          password: form.password,
+        }
+      );
 
-  try {
-    const res = await axios.post("http://localhost:5000/api/auth/login", {
-      email: form.email,
-      password: form.password,
-    });
+      localStorage.setItem("token", res.data.token);
+      setToken(res.data.token);
 
-    console.log("LOGIN RESPONSE:", res.data);
+      toast.success("Login successful");
+    } catch (err: any) {
+      toast.error("Login Failed");
+    }
+  };
 
-    localStorage.setItem("token", res.data.token);
-
-    setToken(res.data.token); // VERY IMPORTANT
-
-    toast.success("Login successful");
-  } catch (err: any) {
-    console.log("LOGIN ERROR:", err.response?.data || err.message);
-    toast.error("Login Failed");
-  }
-};
   // REGISTER
   const handleRegister = async (e: any) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const res = await axios.post("http://localhost:5000/api/auth/register", {
-      name: form.name,
-      email: form.email,
-      password: form.password,
-      role: form.role,
-    });
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          role: form.role,
+        }
+      );
 
-    toast.success("Account created successfully 🎉");
+      toast.success("Account created successfully 🎉");
 
-    // 👉 AUTO LOGIN AFTER REGISTER (IMPORTANT PART)
-    const loginRes = await axios.post("http://localhost:5000/api/auth/login", {
-      email: form.email,
-      password: form.password,
-    });
+      const loginRes = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          email: form.email,
+          password: form.password,
+        }
+      );
 
-    localStorage.setItem("token", loginRes.data.token);
-    setToken(loginRes.data.token);
+      localStorage.setItem("token", loginRes.data.token);
+      setToken(loginRes.data.token);
 
-    toast.success("Logged in successfully 🚀");
-  } catch (err: any) {
-    toast.error(err.response?.data?.message || "Signup Failed");
-  }
-};
+      toast.success("Logged in successfully 🚀");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Signup Failed");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0F172A] px-4">
       <div className="w-full max-w-md bg-[#1E293B] rounded-3xl shadow-2xl overflow-hidden border border-slate-700">
@@ -107,7 +111,6 @@ export default function Auth({ setToken }: any) {
           onSubmit={isLogin ? handleLogin : handleRegister}
           className="p-8 space-y-4"
         >
-          {/* NAME */}
           {!isLogin && (
             <input
               name="name"
@@ -117,7 +120,6 @@ export default function Auth({ setToken }: any) {
             />
           )}
 
-          {/* EMAIL */}
           <input
             name="email"
             placeholder="Email"
@@ -125,7 +127,6 @@ export default function Auth({ setToken }: any) {
             className="w-full p-3 rounded-xl bg-[#111827] text-white"
           />
 
-          {/* PASSWORD */}
           <div className="relative">
             <input
               name="password"
@@ -144,7 +145,6 @@ export default function Auth({ setToken }: any) {
             </button>
           </div>
 
-          {/* CONFIRM PASSWORD */}
           {!isLogin && (
             <input
               name="confirmPassword"
@@ -155,7 +155,6 @@ export default function Auth({ setToken }: any) {
             />
           )}
 
-          {/* ROLE */}
           {!isLogin && (
             <select
               name="role"
@@ -167,7 +166,6 @@ export default function Auth({ setToken }: any) {
             </select>
           )}
 
-          {/* BUTTON */}
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-sky-500 to-cyan-400 py-3 rounded-xl text-white font-semibold"
