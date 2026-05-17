@@ -91,3 +91,15 @@ Frontend
 cd frontend
 npm install
 npm run dev
+
+API Endpoints
+
+Auth Routes
+POST /api/auth/register → Register user
+POST /api/auth/login → Login user
+
+Lead Routes
+GET /api/leads → Get all leads
+POST /api/leads → Create lead
+PUT /api/leads/:id → Update lead
+DELETE /api/leads/:id → Delete lead
